@@ -49,3 +49,25 @@ search=jfy
 scm=1007.51705.413671.0
 &
 spm=a2a0e.tm80335409.just4u.d_128483736
+
+
+
+// Modules -> feature 
+// ecommerce => 
+    // MVP => Minimal Viable Product (Core feature)
+    // Auth and Authorization
+    // Multi vendor /single vendor 
+    // Orders 
+    // Product 
+    // Brand 
+    // Categories 
+    // Transactions 
+    // banners 
+    // chat implment(socket)
+
+    // Reviews 
+    // Offers/coupons/Vouchers
+    // logistic 
+    // Inventory
+    // customer support 
+
