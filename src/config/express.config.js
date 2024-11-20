@@ -13,6 +13,27 @@ app.use((req, res, next) => {
 app.use('/api/v1', apiRouter);
 // app.use("/api/v2", apiRouter);
 
+
+// 404 
+app.use((req, res, next) => {
+    next({code: 404, message: "Not found", status: "NOT_FOUND"});
+})
+
+
+// error handling middleware 
+app.use((error, req, res, next) => {
+    let code = error.code || 500;
+    let detail = error.detail || null
+    let message = error.message || "Internal Server Error";
+    let status = error.status || "INTERNAL_SERVER_ERROR";
+    
+    res.status(code).json({
+        data: detail,
+        message: message,
+        status: status,
+        options: null
+    })
+})
 module.exports = app
 
 // no execution
