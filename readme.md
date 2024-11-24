@@ -71,3 +71,7 @@ spm=a2a0e.tm80335409.just4u.d_128483736
     // Inventory
     // customer support 
 
+
+# Validtion 
+- joi, yup, zod, ajv, class-Validator 
+

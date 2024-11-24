@@ -4,6 +4,12 @@ const apiRouter = require("../router/router")
 
 const app = express();
 
+// body parsers 
+app.use(express.json()) //json parser
+app.use(express.urlencoded({
+    extended: false
+}))
+
 app.use((req, res, next) => {
     next()
 })
