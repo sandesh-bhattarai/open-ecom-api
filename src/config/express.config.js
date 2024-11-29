@@ -1,4 +1,8 @@
 const express = require("express");
+
+// load/connect mongodb
+require("./db.config");
+
 // import router 
 const apiRouter = require("../router/router")
 
