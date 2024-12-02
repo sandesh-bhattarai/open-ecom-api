@@ -1,7 +1,7 @@
 const authRouter = require("express").Router();
 const { bodyValidator } = require("../../middlewares/bodyvalidator.middleware");
 const authCtrl = require("./auth.controller");
-const { registerDataDTO, loginDTO } = require("./auth.validator");
+const { registerDataDTO, loginDTO, activationDTO } = require("./auth.validator");
 const uploader = require("../../middlewares/multipart-parser.middleware");
 
 // if multipart/form-data content does not have any file to upload, use .none() function
@@ -21,6 +21,9 @@ const uploader = require("../../middlewares/multipart-parser.middleware");
 // method: post 
 // Response: Json => message => your account has been registered 
 authRouter.post('/register', uploader().single('image'),  bodyValidator(registerDataDTO), authCtrl.register)  // 
+
+authRouter.post("/activate", bodyValidator(activationDTO), authCtrl.activateUser)
+authRouter.post("/resend-otp", bodyValidator(activationDTO), authCtrl.resendOtp)
 
 authRouter.post('/login', bodyValidator(loginDTO), authCtrl.login)  // 
 

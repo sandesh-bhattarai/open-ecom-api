@@ -33,10 +33,23 @@ app.use((req, res, next) => {
 // error handling middleware 
 app.use((error, req, res, next) => {
     let code = error.code || 500;
-    let detail = error.detail || null
+    let detail = error.detail || {}
     let message = error.message || "Internal Server Error";
     let status = error.status || "INTERNAL_SERVER_ERROR";
     
+    // uniqueness validation failed 
+    if(+error.code === 11000) {
+        code = 400
+        status = 'VALIDATION_FAILED'
+        
+        // {keyPattern: {email: 1, name: 1}} => ['email', 'name']
+        Object.keys(error.keyPattern).map((key) => {
+            detail[key] = `${key} should be unique`
+        })
+        message = "Validation failed";
+    }
+
+    console.log(error)
     res.status(code).json({
         data: detail,
         message: message,

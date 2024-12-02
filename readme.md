@@ -228,3 +228,26 @@ e.g. db.users.find()    // ~ SELECT * FROM users;
     - Model definition
 
 ### TASK: Design all the necessary tables/schema for an ecommerce project
+- Category 
+- Order 
+- Product
+- Cart 
+- Transactions/payments
+- Review 
+- User
+- Wishlist 
+- Offers
+- Brand 
+- Banner 
+- Chat
+
+
+
+- Banner 
+- Brand 
+- Category 
+- User done
+- Product 
+- Orders 
+- Transactions (esewa, khalti, imepay, connectips, bank)    => merchant id ( nominal fee, commission rate definition )
+- Chat

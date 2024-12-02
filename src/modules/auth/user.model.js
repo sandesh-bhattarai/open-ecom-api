@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { statusSchema, createdBy, updatedBy } = require("../../common/schema");
+const { commonStr } = require("../../common/schema");
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -34,9 +34,8 @@ const UserSchema = new mongoose.Schema({
     phone: String, 
     otp: String, 
     otpExpiryTime: Date,
-    status: statusSchema,
-    createdBy: createdBy, 
-    updatedBy: updatedBy
+    ...commonStr
+    
 }, {
     timestamps: true,        /// createdAt, updatedAt
     autoCreate: true, 

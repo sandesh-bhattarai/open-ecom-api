@@ -1,25 +1,32 @@
 const mongoose = require("mongoose");
 
-const statusSchema =new mongoose.Schema({
+const statusSchema ={
     type: String, 
     enum: ['active','inactive'],
-    default: 'inactive'
-})
+    default: "inactive"
+}
 
-const createdBy = new mongoose.Schema({
+const createdBy = {
     type: mongoose.Types.ObjectId,
     ref: "User",
     default: null
-})
+}
 
-const updatedBy = new mongoose.Schema({
+const updatedBy = {
     type: mongoose.Types.ObjectId,
-    ref: "User",
+    ref: "User",        // _id => ObjectId
     default: null
-})
+}
+
+const commonStr ={
+    status: statusSchema,
+    createdBy: createdBy,
+    updatedBy: updatedBy
+}
 
 module.exports = {
     statusSchema,
     createdBy, 
-    updatedBy
+    updatedBy,
+    commonStr
 }
