@@ -29,8 +29,6 @@ class AuthService {
         }
     }
 
-
-
     sendActivationNotification =async (name, otp, email) => {
         try {
             // Email notification

@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const emailSvc = require("../../services/mail.service");
 const { randomStringGenerator } = require("../../utilities/helpers");
 const authSvc = require("./auth.service");
+const jwt = require("jsonwebtoken");
 
 class AuthController {
     register = async (req, res, next) => {
@@ -46,6 +47,10 @@ class AuthController {
             
             if(today > otpExpiry) {
                 throw {code: 422, message: "OTP Expired", status: "OTP_EXPIRED"}
+            }
+
+            if(data.otp !== user.otp) {
+                throw {code: 403, message: "Invalid OTP CODE", status: "OTP_INVALID"}
             }
 
             await authSvc.activateUser(user)
@@ -99,8 +104,103 @@ class AuthController {
         }
     }
 
-    login = (req, res, next) => {
+    login = async (req, res, next) => {
+        try {
+            const data = req.body; 
+            const user = await authSvc.getSingleUserByFilter({
+                email: data.email
+            })
 
+            // active 
+            if(user.status !== 'active') {
+                throw {code: 401, message: "Account not activated", status: "ACCOUNT_NOT_ACTIVE"}
+            }
+
+            // verify password 
+            if(bcrypt.compareSync(data.password, user.password)) {
+                // jwt token 
+                let accessToken = jwt.sign({
+                    sub: user._id,
+                    typ: "bearer"
+                }, process.env.JWT_SECRET, {
+                    expiresIn: "1h"
+                });
+
+                let refreshToken =  jwt.sign({
+                    sub: user._id,
+                    typ: "refresh"
+                }, process.env.JWT_SECRET, {
+                    expiresIn: "10d",
+                });
+
+                res.json({
+                    detail: {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken,
+                        user: {
+                            _id: user._id, 
+                            name: user.name, 
+                            email: user.email, 
+                            role: user.role, 
+                            image: user.image
+                        }
+                    },
+                    message: "User Login success",
+                    status: "LOGIN_SUCCESSS",
+                    options: null
+                })
+            } else {
+                throw {code: 401, message: "Credential does not match", status: "CREDENTIAL_MISMATCH"}
+            }
+        } catch(exception) {
+            console.log("Login: ", exception)
+            next(exception)
+        }
+    }
+
+    getLoggedInUser = async(req, res, next) => {
+        try {
+            res.json({
+                detail: req.authUser,
+                message: "Your profile",
+                status: "YOUR_PROFILE",
+                options: null
+            })
+        } catch(exception) {
+            next(exception)
+        }
+    }
+
+    getRefreshToken = async(req, res, next) => {
+        try {
+            let user = req.authUser;
+
+            let accessToken = jwt.sign({
+                sub: user._id,
+                typ: "bearer"
+            }, process.env.JWT_SECRET, {
+                expiresIn: "1h"
+            });
+
+            let refreshToken =  jwt.sign({
+                sub: user._id,
+                typ: "refresh"
+            }, process.env.JWT_SECRET, {
+                expiresIn: "10d",
+            });
+            res.json({
+                detail: {
+                    accessToken: accessToken,
+                    refreshToken: refreshToken
+                },
+                message: "Token Refreshed",
+                status: "REFRESH_TOKEN",
+                options: null
+            })
+        } catch(exception) {
+            console.log("getRefreshToken", exception)
+            next(exception);
+        }
     }
 }
 

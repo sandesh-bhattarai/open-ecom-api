@@ -3,6 +3,9 @@ const { bodyValidator } = require("../../middlewares/bodyvalidator.middleware");
 const authCtrl = require("./auth.controller");
 const { registerDataDTO, loginDTO, activationDTO } = require("./auth.validator");
 const uploader = require("../../middlewares/multipart-parser.middleware");
+const { checkLogin, checkRefreshToken } = require("../../middlewares/auth.middleware");
+
+// force logout ()
 
 // if multipart/form-data content does not have any file to upload, use .none() function
 
@@ -27,6 +30,8 @@ authRouter.post("/resend-otp", bodyValidator(activationDTO), authCtrl.resendOtp)
 
 authRouter.post('/login', bodyValidator(loginDTO), authCtrl.login)  // 
 
+authRouter.get('/me', checkLogin, authCtrl.getLoggedInUser)   // all the loggedin User detail
+authRouter.get("/refresh", checkRefreshToken, authCtrl.getRefreshToken)
 
 
 module.exports = authRouter

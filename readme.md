@@ -251,3 +251,16 @@ e.g. db.users.find()    // ~ SELECT * FROM users;
 - Orders 
 - Transactions (esewa, khalti, imepay, connectips, bank)    => merchant id ( nominal fee, commission rate definition )
 - Chat
+
+
+## REST API 
+- We do not maintan states 
+- Login  2 key(token) 
+    - accesstoken 
+    - refreshtoken 
+- jwt token(json web token)
+- header+payload+signature
+- header => typ, algo
+- payload => data 
+- signature => priavte key + public key / jwt secret
+- Bearer type token 
