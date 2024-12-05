@@ -1,20 +1,19 @@
+const { checkLogin } = require("../../middlewares/auth.middleware");
+const { bodyValidator } = require("../../middlewares/bodyvalidator.middleware");
+const uploader = require("../../middlewares/multipart-parser.middleware");
+const { allowRole } = require("../../middlewares/rbac.middleware");
+const bannerCtrl = require("./banner.controller");
+const { bannerCreateDTO } = require("./banner.validator");
+
 const bannerRouter = require("express").Router();
 
-// CRUD 
-// Create 
-// /banner
-
 bannerRouter.route('/')
-    .post((req, res, next) => {})   // banner create
-    .get((req, res, next) => {})  // to read all the banners 
+    .post(checkLogin, allowRole("admin"), uploader().single('image'), bodyValidator(bannerCreateDTO), bannerCtrl.store)   // banner create
+//     .get()  // to read all the banners 
 
-// bannerRouter.post("/",(req, res, next) => {})   // banner create
-// Read 
-// bannerRouter.get("/",(req, res, next) => {})  // to read all the banners 
-
-bannerRouter.route("/:id")
-    .post((req, res, next) => {}) // to get a single banner by id
-    .put((req, res, next) => {})  // to update a banner
-    .delete( (req, res, next) => {})
+// bannerRouter.route("/:id")
+//     .post() // to get a single banner by id
+//     .put()  // to update a banner
+//     .delete( )
 
 module.exports = bannerRouter;

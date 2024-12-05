@@ -24,7 +24,14 @@ const commonStr ={
     updatedBy: updatedBy
 }
 
+const schemaOpts = {
+    timestamps: true, 
+    autoIndex: true, 
+    autoCreate: true
+}
+
 module.exports = {
+    schemaOpts,
     statusSchema,
     createdBy, 
     updatedBy,

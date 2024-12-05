@@ -4,6 +4,7 @@ const authCtrl = require("./auth.controller");
 const { registerDataDTO, loginDTO, activationDTO } = require("./auth.validator");
 const uploader = require("../../middlewares/multipart-parser.middleware");
 const { checkLogin, checkRefreshToken } = require("../../middlewares/auth.middleware");
+const { allowRole } = require("../../middlewares/rbac.middleware");
 
 // force logout ()
 

@@ -1,6 +1,8 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 
+const populateAdmin = require("../seeder/admin.seeder");
+
 const dbConnect =async () => {
     try{
         console.log("db server is connecting")
@@ -9,8 +11,13 @@ const dbConnect =async () => {
             autoCreate: true, 
             autoIndex: true
         });
-        // TODO: Seeder run
+        
         console.log("Db server connected successfully.....")
+
+
+        console.log("Admin table seeding started....")
+        await populateAdmin()
+        console.log("Admin table seeding completed....")
     } catch(exception) {
         console.log("Error connecting db....")   
         console.log(exception)
