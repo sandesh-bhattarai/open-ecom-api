@@ -7,9 +7,10 @@ const { bannerCreateDTO } = require("./banner.validator");
 
 const bannerRouter = require("express").Router();
 
+// /banner
 bannerRouter.route('/')
     .post(checkLogin, allowRole("admin"), uploader().single('image'), bodyValidator(bannerCreateDTO), bannerCtrl.store)   // banner create
-//     .get()  // to read all the banners 
+    .get(checkLogin, allowRole("admin"), bannerCtrl.index)  // to read all the banners 
 
 // bannerRouter.route("/:id")
 //     .post() // to get a single banner by id
