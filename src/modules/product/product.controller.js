@@ -1,16 +1,16 @@
-const bannerSvc = require("./banner.service");
+const productSvc = require("./product.service");
 
-class BannerController {
+class ProductController {
     store = async (req, res, next) => {
         try{
-            const data = await bannerSvc.transformCreateRequest(req);
+            const data = await productSvc.transformCreateRequest(req);
             // db store
-            const banner = await bannerSvc.createBanner(data);
+            const product = await productSvc.createProduct(data);
 
             res.json({
-                detail: banner, 
-                message: "Banner Created successfully",
-                status: "BANNER_CREATE_SUCCESS",
+                detail: product, 
+                message: "Product Created successfully",
+                status: "PRODUCT_CREATE_SUCCESS",
                 options: null
             })
         } catch(exception) {
@@ -35,17 +35,17 @@ class BannerController {
                 }
             }
 
-            let data = await bannerSvc.listAllBanner({
+            let data = await productSvc.listAllProduct({
                 skip,
                 limit, 
                 filter
             });
             
-            const totalCount = await bannerSvc.countData(filter);
+            const totalCount = await productSvc.countData(filter);
 
             res.json({
                 detail: data, 
-                message: "Banner List",
+                message: "Product List",
                 status: "LISTING_SUCCESS",
                 options: {
                     currentPage: page,
@@ -61,12 +61,12 @@ class BannerController {
     detail = async(req, res, next) => {
         try {
             const id = req.params.id;
-            const data = await bannerSvc.getSingleByFilter({
+            const data = await productSvc.getSingleByFilter({
                 _id: id
             });
             res.json({
                 detail: data, 
-                message: "Banner fetched",
+                message: "Product fetched",
                 status: "FETCH_SUCCESS",
                 options: null
             })
@@ -77,18 +77,18 @@ class BannerController {
 
     update = async(req, res, next) => {
         try {
-            const data = await bannerSvc.getSingleByFilter({
+            const data = await productSvc.getSingleByFilter({
                 _id: req.params.id
             })
-            const transformData = await bannerSvc.transformUpdateRequest(req, data);
-            const response = await bannerSvc.updateByFilter({
+            const transformData = await productSvc.transformUpdateRequest(req, data);
+            const response = await productSvc.updateByFilter({
                 _id: req.params.id
             }, transformData)
 
             res.json({
                 detail: response, 
-                message: "Banner Updated successfully",
-                status: "BANNER_UPDATE_SUCCESS",
+                message: "Product Updated successfully",
+                status: "PRODUCT_UPDATE_SUCCESS",
                 options: null
             })
         } catch(exception) {
@@ -97,16 +97,16 @@ class BannerController {
     }
     delete = async(req, res, next) => {
         try {
-            const data = await bannerSvc.getSingleByFilter({
+            const data = await productSvc.getSingleByFilter({
                 _id: req.params.id
             })
-            const response = await bannerSvc.deleteByFilter({
+            const response = await productSvc.deleteByFilter({
                 _id: req.params.id
             })
             res.json({
                 detail: response, 
-                message: "Banner deleted successfully",
-                status: "BANNER_DELETE_SUCCESS",
+                message: "Product deleted successfully",
+                status: "PRODUCT_DELETE_SUCCESS",
                 options: null
             })
         } catch(exception) {
@@ -116,7 +116,7 @@ class BannerController {
 
     getForHome = async(req, res, next) => {
         try {
-            const listBanner = await bannerSvc.listAllBanner({
+            const listProduct = await productSvc.listAllProduct({
                 skip: 0,
                 limit: 10, 
                 filter: {
@@ -128,9 +128,9 @@ class BannerController {
                 }
             })
             res.json({
-                detail: listBanner, 
-                message: "Banner for home page",
-                status: "BANNER_HOME",
+                detail: listProduct, 
+                message: "Product for home page",
+                status: "PRODUCT_HOME",
                 options: null
             })
         } catch(exception) {
@@ -140,5 +140,5 @@ class BannerController {
 }
 
 
-const bannerCtrl = new BannerController()
-module.exports = bannerCtrl;
+const productCtrl = new ProductController()
+module.exports = productCtrl;

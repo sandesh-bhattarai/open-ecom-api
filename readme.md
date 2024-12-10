@@ -264,3 +264,12 @@ e.g. db.users.find()    // ~ SELECT * FROM users;
 - payload => data 
 - signature => priavte key + public key / jwt secret
 - Bearer type token 
+
+## Brand 
+- _id, name, logo, slug, status, createdBy, updatedBy, createdAt, updatedAt
+
+## Category 
+- _id, name, logo, slug, parentId, status, createdBy, updatedBy, createdAt, updatedAt
+
+## products 
+- _id, title, slug, category, brand, description, price, discount, images, seller,  status, createdBy, updatedBy, createdAt, updatedAt

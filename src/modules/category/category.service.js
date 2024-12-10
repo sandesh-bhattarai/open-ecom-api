@@ -1,15 +1,21 @@
+const slugify = require("slugify");
 const fileUploadSvc = require("../../services/fileuploader.service");
-const BannerModel = require("./banner.model");
+const CategoryModel = require("./category.model");
 
-class BannerService {
+class CategoryService {
     transformCreateRequest = async(req) => {
         try {
             let data = req.body;
+            data.slug = slugify(data.title, {
+                lower: true
+            })
             
-            if(!req.file) {
-                throw {code: 400, detail: {image: "Image is required"}, message: "Validation Failed", status: "VALIDATION_FAILED"}
-            } else {
-                data.image = await fileUploadSvc.uploadFile(req.file.path, '/banner')
+            if(req.file) {
+                data.image = await fileUploadSvc.uploadFile(req.file.path, '/category')
+            }
+
+            if(!data.parentId || data.parentId === '') {
+                data.parentId = null;
             }
 
             data.createdBy = req.authUser._id;
@@ -20,16 +26,19 @@ class BannerService {
         }
     }
 
-    transformUpdateRequest = async(req, bannerData) => {
+    transformUpdateRequest = async(req, categoryData) => {
         try {
             let data = req.body;
             
             if(req.file) {
-                data.image = await fileUploadSvc.uploadFile(req.file.path, '/banner')
+                data.image = await fileUploadSvc.uploadFile(req.file.path, '/category')
             } else {
-                data.image = bannerData.image
+                data.image = categoryData.image
             }
 
+            if(!data.parentId || data.parentId === '') {
+                data.parentId = null;
+            }
             data.updatedBy = req.authUser._id;
             return data;
         } catch(exception) {
@@ -38,28 +47,29 @@ class BannerService {
         }
     }
 
-    createBanner = async(data)=>{
+    createCategory = async(data)=>{
         try {
-            const bannerObj = new BannerModel(data)
-            return await bannerObj.save();
+            const categoryObj = new CategoryModel(data)
+            return await categoryObj.save();
         } catch(exception) {
-            console.log("createBanner", createBanner)
+            console.log("createCategory", exception)
             throw exception
         }
     }
 
     countData = async(filter = {}) => {
         try {
-            return await BannerModel.countDocuments(filter)
+            return await CategoryModel.countDocuments(filter)
         }catch(exception) {
             cnosole.log("CountData", exception)
             throw exception
         }
     }
 
-    listAllBanner = async({skip=0, limit=10, filter={}}) => {
+    listAllCategory = async({skip=0, limit=10, filter={}}) => {
         try{
-            let data = await BannerModel.find(filter)
+            let data = await CategoryModel.find(filter)
+                        .populate("parentId", ["_id",'title','slug'])
                         .populate("createdBy", ["_id","name",'email','status'])    
                         .populate("updatedBy", ["_id","name",'email','status'])
                         .sort({_id: -1})
@@ -67,18 +77,19 @@ class BannerService {
                         .limit(limit);
             return data; 
         } catch(exception) {
-            console.log("listALlBanner", exception)
+            console.log("listALlCategory", exception)
             throw exception;
         }
     }
 
     getSingleByFilter = async(filter) => {
         try {
-            const data = await BannerModel.findOne(filter)
+            const data = await CategoryModel.findOne(filter)
+                        .populate("parentId", ["_id",'title','slug'])
                         .populate("createdBy", ["_id","name",'email','status'])    
                         .populate("updatedBy", ["_id","name",'email','status']);
             if(!data) {
-                throw {code: 404, message: "Banner does not exists", status: "BANNER_NOT_FOUND"}
+                throw {code: 404, message: "Category does not exists", status: "CATEGORY_NOT_FOUND"}
             }
             return data; 
         } catch(exception) {
@@ -89,7 +100,7 @@ class BannerService {
     
     updateByFilter = async(filter, updateData) => {
         try {
-            const resp = await BannerModel.findOneAndUpdate(filter, {$set: updateData});
+            const resp = await CategoryModel.findOneAndUpdate(filter, {$set: updateData});
             return resp;
         } catch(exception)  {
             console.log("updateByFilter", exception)
@@ -99,7 +110,7 @@ class BannerService {
 
     deleteByFilter = async(filter) => {
         try {
-            const resp = await BannerModel.findOneAndDelete(filter);
+            const resp = await CategoryModel.findOneAndDelete(filter);
             return resp;
         } catch(exception)  {
             console.log("deleteByFilter", exception)
@@ -108,5 +119,5 @@ class BannerService {
     }
 }
 
-const bannerSvc = new BannerService()
-module.exports  = bannerSvc;
+const categorySvc = new CategoryService()
+module.exports  = categorySvc;

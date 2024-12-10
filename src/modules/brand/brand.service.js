@@ -1,15 +1,21 @@
+const slugify = require("slugify");
 const fileUploadSvc = require("../../services/fileuploader.service");
-const BannerModel = require("./banner.model");
+const BrandModel = require("./brand.model");
 
-class BannerService {
+class BrandService {
     transformCreateRequest = async(req) => {
         try {
             let data = req.body;
+            // title 
+            // special chars => remove 
+            // space replace => - 
+            // lowercase convert
+            data.slug = slugify(data.title, {
+                lower: true
+            })
             
-            if(!req.file) {
-                throw {code: 400, detail: {image: "Image is required"}, message: "Validation Failed", status: "VALIDATION_FAILED"}
-            } else {
-                data.image = await fileUploadSvc.uploadFile(req.file.path, '/banner')
+            if(req.file) {
+                data.image = await fileUploadSvc.uploadFile(req.file.path, '/brand')
             }
 
             data.createdBy = req.authUser._id;
@@ -20,14 +26,14 @@ class BannerService {
         }
     }
 
-    transformUpdateRequest = async(req, bannerData) => {
+    transformUpdateRequest = async(req, brandData) => {
         try {
             let data = req.body;
             
             if(req.file) {
-                data.image = await fileUploadSvc.uploadFile(req.file.path, '/banner')
+                data.image = await fileUploadSvc.uploadFile(req.file.path, '/brand')
             } else {
-                data.image = bannerData.image
+                data.image = brandData.image
             }
 
             data.updatedBy = req.authUser._id;
@@ -38,28 +44,28 @@ class BannerService {
         }
     }
 
-    createBanner = async(data)=>{
+    createBrand = async(data)=>{
         try {
-            const bannerObj = new BannerModel(data)
-            return await bannerObj.save();
+            const brandObj = new BrandModel(data)
+            return await brandObj.save();
         } catch(exception) {
-            console.log("createBanner", createBanner)
+            console.log("createBrand", exception)
             throw exception
         }
     }
 
     countData = async(filter = {}) => {
         try {
-            return await BannerModel.countDocuments(filter)
+            return await BrandModel.countDocuments(filter)
         }catch(exception) {
             cnosole.log("CountData", exception)
             throw exception
         }
     }
 
-    listAllBanner = async({skip=0, limit=10, filter={}}) => {
+    listAllBrand = async({skip=0, limit=10, filter={}}) => {
         try{
-            let data = await BannerModel.find(filter)
+            let data = await BrandModel.find(filter)
                         .populate("createdBy", ["_id","name",'email','status'])    
                         .populate("updatedBy", ["_id","name",'email','status'])
                         .sort({_id: -1})
@@ -67,18 +73,18 @@ class BannerService {
                         .limit(limit);
             return data; 
         } catch(exception) {
-            console.log("listALlBanner", exception)
+            console.log("listALlBrand", exception)
             throw exception;
         }
     }
 
     getSingleByFilter = async(filter) => {
         try {
-            const data = await BannerModel.findOne(filter)
+            const data = await BrandModel.findOne(filter)
                         .populate("createdBy", ["_id","name",'email','status'])    
                         .populate("updatedBy", ["_id","name",'email','status']);
             if(!data) {
-                throw {code: 404, message: "Banner does not exists", status: "BANNER_NOT_FOUND"}
+                throw {code: 404, message: "Brand does not exists", status: "BANNER_NOT_FOUND"}
             }
             return data; 
         } catch(exception) {
@@ -89,7 +95,7 @@ class BannerService {
     
     updateByFilter = async(filter, updateData) => {
         try {
-            const resp = await BannerModel.findOneAndUpdate(filter, {$set: updateData});
+            const resp = await BrandModel.findOneAndUpdate(filter, {$set: updateData});
             return resp;
         } catch(exception)  {
             console.log("updateByFilter", exception)
@@ -99,7 +105,7 @@ class BannerService {
 
     deleteByFilter = async(filter) => {
         try {
-            const resp = await BannerModel.findOneAndDelete(filter);
+            const resp = await BrandModel.findOneAndDelete(filter);
             return resp;
         } catch(exception)  {
             console.log("deleteByFilter", exception)
@@ -108,5 +114,5 @@ class BannerService {
     }
 }
 
-const bannerSvc = new BannerService()
-module.exports  = bannerSvc;
+const brandSvc = new BrandService()
+module.exports  = brandSvc;
