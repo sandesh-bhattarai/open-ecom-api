@@ -8,6 +8,7 @@ const { productCreateDTO, productUpdateDTO } = require("./product.validator");
 const productRouter = require("express").Router();
 
 productRouter.get('/home-product', productCtrl.getForHome)
+productRouter.get("/:slug/by-slug", productCtrl.getBySlug)
 
 // /product
 productRouter.route('/')

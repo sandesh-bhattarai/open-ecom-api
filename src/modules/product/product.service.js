@@ -36,6 +36,9 @@ class ProductService {
 
             data.seller = data.seller && data.seller !== '' ? data.seller : req.authUser._id;
 
+            // ruppes 
+            data.price = data.price * 100;
+
             data.actualAmt = data.price - data.price * data.discount/100;
 
             data.createdBy = req.authUser._id;
@@ -49,9 +52,11 @@ class ProductService {
     transformUpdateRequest = async(req, productData) => {
         try {
             let data = req.body;
-            let images = [
-                ...productData['images']
-            ]
+            let images = []
+            
+            if(productData.images) {
+                images = [...productData.images]
+            }
 
             if(req.files) {
 
@@ -72,6 +77,8 @@ class ProductService {
             }
 
             data.seller = data.seller && data.seller !== '' ? data.seller : req.authUser._id;
+            
+            data.price = data.price * 100;
 
             data.actualAmt = data.price - data.price * data.discount/100;
             
@@ -122,6 +129,7 @@ class ProductService {
 
     getSingleByFilter = async(filter) => {
         try {
+            // console.log(filter)
             const data = await ProductModel.findOne(filter)
                         .populate("category", ["_id",'title', "slug"])
                         .populate("brand", ["_id",'title', 'slug'])

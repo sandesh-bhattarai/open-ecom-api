@@ -10,7 +10,7 @@ const brandRouter = require("express").Router();
 brandRouter.get('/home-brand', brandCtrl.getForHome)
 
 // TODO: API TO Get all the products by brand slug 
-// brandRouter.get("/slug/:slug", brandCtrl.getProductList)
+brandRouter.get("/:slug/by-slug", brandCtrl.getBySlug)
 
 // /brand
 brandRouter.route('/')

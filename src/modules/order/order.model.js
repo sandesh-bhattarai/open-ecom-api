@@ -1,0 +1,28 @@
+const  {default: mongoose} = require("mongoose");
+const { schemaOpts, createdBy, updatedBy } = require("../../common/schema");
+
+// Bill 
+const OrderSchema = new mongoose.Schema({
+    buyer: {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+    orderDate: Date, 
+    subTotal: Number, 
+    discount: Number, 
+    tax: Number, 
+    serviceCharge: Number, 
+    deliveryCharge: Number,
+    total: Number, 
+    status: {
+        type: String, 
+        enum: ['pending', 'completed','cancelled'],
+        default: "pending"
+    },
+    createdBy: createdBy,
+    updatedBy: updatedBy
+},schemaOpts)
+
+const OrderModel = mongoose.model("Order", OrderSchema);
+module.exports =  OrderModel;

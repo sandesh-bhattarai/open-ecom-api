@@ -121,9 +121,7 @@ class ProductController {
                 limit: 10, 
                 filter: {
                     $and: [
-                        {status: "active"},
-                        {startDate: {$lte: new Date()}},
-                        {endDate: {$gte: new Date()}}
+                        {status: "active"}
                     ]
                 }
             })
@@ -131,6 +129,36 @@ class ProductController {
                 detail: listProduct, 
                 message: "Product for home page",
                 status: "PRODUCT_HOME",
+                options: null
+            })
+        } catch(exception) {
+            next(exception)
+        }
+    }
+
+    getBySlug= async(req, res, next) => {
+        try {
+            const slug = req.params.slug; 
+            const productDetail = await productSvc.getSingleByFilter({
+                slug: slug
+            });
+
+            // related products 
+            const listRelated = await productSvc.listAllProduct({
+                skip: 0, 
+                limit: 8,
+                filter: {
+                    slug: {$ne: slug},
+                    category: productDetail.category
+                }
+            })
+            res.json({
+                detail: {
+                    product: productDetail,
+                    related: listRelated
+                },
+                message: "Product Detail with related",
+                stauts: "PRODUCT_DETAIL",
                 options: null
             })
         } catch(exception) {

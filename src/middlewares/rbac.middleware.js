@@ -6,6 +6,7 @@ const allowRole = (role) => {
             if(!loggedinUserRole) {
                 throw {code: 403, message: "Role is not assigned to user", status: "ROLE_NOT_ASSIGNED"}
             }
+            // loggedInuserRole ===  'admin' => next()
 
             if(
                 (typeof role === 'string' && loggedinUserRole === role) || 

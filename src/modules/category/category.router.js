@@ -10,7 +10,7 @@ const categoryRouter = require("express").Router();
 categoryRouter.get('/home-category', categoryCtrl.getForHome)
 
 // TODO: API TO Get all the products by category slug 
-// categoryRouter.get("/slug/:slug", categoryCtrl.getProductList)
+categoryRouter.get("/:slug/by-slug", categoryCtrl.getDetailBySlug)
 
 // /category
 categoryRouter.route('/')
