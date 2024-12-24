@@ -44,6 +44,29 @@ class OrderDetailService {
             throw exception;
         }
     }
+
+    updateCartByFilter = async(filter, updateData) => {
+        try {
+            const updatedBody = await OrderDetailModel.updateMany(filter, {$set: updateData});
+            return updatedBody;
+        } catch(exception) {
+            console.log("updateSingleCart", exception);
+            throw exception;
+        }
+    }
+
+    deleteFromCart = async(cartId) => {
+        try {
+            const removed = await OrderDetailModel.findByIdAndDelete(cartId);
+            if(!removed) {
+                throw {code: 404, message: "Cart does not exists anymore", status: "CART_DOES_NOT_EXISTS"}
+            }
+            return removed;
+        } catch(exception) {
+            console.log("deleteFromCart", exception);
+            throw exception;
+        }
+    }
 }
 
 const orderDetailSvc = new OrderDetailService()

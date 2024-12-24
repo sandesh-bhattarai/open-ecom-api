@@ -15,6 +15,7 @@ const OrderSchema = new mongoose.Schema({
     serviceCharge: Number, 
     deliveryCharge: Number,
     total: Number, 
+    isPaid: Boolean,
     status: {
         type: String, 
         enum: ['pending', 'completed','cancelled'],

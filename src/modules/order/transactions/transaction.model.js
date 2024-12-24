@@ -9,6 +9,7 @@ const TransactionSchema = new mongoose.Schema({
     },
     transactionCode: {
         type: String, 
+        unique: true, 
         required: true
     },
     amount: {
