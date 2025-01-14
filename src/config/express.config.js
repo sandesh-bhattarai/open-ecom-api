@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 
 // load/connect mongodb
 require("./db.config");
@@ -7,6 +8,9 @@ require("./db.config");
 const apiRouter = require("../router/router")
 
 const app = express();
+
+// cors allowed
+app.use(cors())
 
 // body parsers 
 app.use(express.json()) //json parser
